@@ -37,44 +37,94 @@
 
 # 1NF / Перша нормальна форма
 
-Кожне поле містить лише одне значення.
+Кожне поле містить лише одне значення. Поле `Product and Quantity` було розділено на окремі поля `Product` та `Quantity`.
 
 | Order ID | Product | Quantity | Address | Date | Client |
-|---------|--------|----------|--------|------|--------|
-|101|Laptop|3|Khreshchatyk 1|2023-03-15|Melnyk|
-|101|Mouse|2|Khreshchatyk 1|2023-03-15|Melnyk|
-|102|Printer|1|Baseina 2|2023-03-16|Shevchenko|
-|103|Mouse|4|Komputerna 3|2023-03-17|Kovalenko|
+|---------|---------|----------|---------|------|--------|
+| 101 | Laptop | 3 | Khreshchatyk 1 | 2023-03-15 | Melnyk |
+| 101 | Mouse | 2 | Khreshchatyk 1 | 2023-03-15 | Melnyk |
+| 102 | Printer | 1 | Baseina 2 | 2023-03-16 | Shevchenko |
+| 103 | Mouse | 4 | Komputerna 3 | 2023-03-17 | Kovalenko |
 
 ---
 
 # 2NF / Друга нормальна форма
 
-Дані розділено на окремі сутності:
+Дані розділено на окремі таблиці, щоб інформація про клієнтів і товари не дублювалася в кожному замовленні.
 
-- Clients
-- Orders
-- Products
-- Order_Items
+## Clients
+
+| client_id | client_name | address |
+|----------|-------------|---------|
+| 1 | Melnyk | Khreshchatyk 1 |
+| 2 | Shevchenko | Baseina 2 |
+| 3 | Kovalenko | Komputerna 3 |
+
+## Products
+
+| product_id | product_name |
+|-----------|--------------|
+| 1 | Laptop |
+| 2 | Mouse |
+| 3 | Printer |
+
+## Orders
+
+| order_id | order_date | client_id |
+|---------|------------|-----------|
+| 101 | 2023-03-15 | 1 |
+| 102 | 2023-03-16 | 2 |
+| 103 | 2023-03-17 | 3 |
+
+## Order_Items
+
+| order_item_id | order_id | product_id | quantity |
+|--------------|----------|------------|----------|
+| 1 | 101 | 1 | 3 |
+| 2 | 101 | 2 | 2 |
+| 3 | 102 | 3 | 1 |
+| 4 | 103 | 2 | 4 |
 
 ---
 
 # 3NF / Третя нормальна форма
 
-Усунено транзитивні залежності:
+У 3НФ усунено транзитивні залежності.  
+Адреса клієнта зберігається тільки в таблиці `clients`, а назва товару тільки в таблиці `products`.
 
-- адреса зберігається тільки у `clients`
-- назва товару тільки у `products`
+Фінальна структура бази даних:
 
----
+## clients
 
-# Final Tables / Фінальна структура БД
+| Column | Type | Description |
+|--------|------|-------------|
+| client_id | INT, PK | Unique client ID |
+| client_name | VARCHAR(100) | Client name |
+| address | VARCHAR(255) | Client address |
 
-- clients
-- orders
-- products
-- order_items
+## products
 
+| Column | Type | Description |
+|--------|------|-------------|
+| product_id | INT, PK | Unique product ID |
+| product_name | VARCHAR(100) | Product name |
+
+## orders
+
+| Column | Type | Description |
+|--------|------|-------------|
+| order_id | INT, PK | Unique order ID |
+| order_date | DATE | Order date |
+| client_id | INT, FK | Reference to clients |
+
+## order_items
+
+| Column | Type | Description |
+|--------|------|-------------|
+| order_item_id | INT, PK | Unique order item ID |
+| order_id | INT, FK | Reference to orders |
+| product_id | INT, FK | Reference to products |
+| quantity | INT | Product quantity |
 ---
 
 # ER Diagram

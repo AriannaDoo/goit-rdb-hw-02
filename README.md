@@ -133,8 +133,3 @@ Created in MySQL Workbench.
 
 ---
 
-# Files
-
-- hw2.sql
-- README.md
-- Screenshots
